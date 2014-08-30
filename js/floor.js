@@ -29,5 +29,6 @@ window.app.Models.Floor = Backbone.Model.extend({
 });
 
 window.app.Collections.Floors = Backbone.Model.extend({
-	model: app.Models.Floor
+	model: app.Models.Floor,
+	comparator: floor
 });

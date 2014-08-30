@@ -7,5 +7,6 @@ app.Collections.PersonQueue = Backbone.Collection.extend({
 });
 
 app.Collections.DestinationSortedPersonList = Backbone.Collection.extend({
-	model: app.Models.Person
+	model: app.Models.Person,
+	comparator: 'destination'
 });
