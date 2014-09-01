@@ -1,8 +1,16 @@
-#mainshow, .settings, .shaft, .elevator {
+html {
+	box-sizing: border-box;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+.stage, .settings, .shaft, .elevator, .office {
 	float: left;
 }
 
-#mainshow {
+.stage {
 	width: 600px;
 }
 
@@ -23,8 +31,12 @@
 	background-color: #abc;
 }
 
+.office {
+	width: 112px;
+	height: 100%;
+}
+
 .shafts {
-	margin-left: 108px;
 	height: 100%;
 }
 
@@ -32,7 +44,10 @@
 	width: 32px;
 	height: 100%;
 	background-color: #000;
-	margin-left: 10px;
+}
+
+.shaft + .shaft {
+	margin-left:10px;
 }
 
 .elevator {
@@ -42,10 +57,6 @@
 	height: 30px;
 	width: 30px;
 	top: -31px;
-	left: 108px;
+	left: 102px;
 	margin-left: 12px;
-}
-
-.office {
-	width: 40%;
 }
