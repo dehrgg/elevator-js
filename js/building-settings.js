@@ -1,7 +1,8 @@
 app.Models.BuildingSettings = Backbone.Model.extend({
 	defaults: {
 		groundFloors: 3,
-		aboveGroundFloors: 17
+		aboveGroundFloors: 14,
+		elevators: 2
 	},
 
 	totalFloors: function() {

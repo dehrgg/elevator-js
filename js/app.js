@@ -10,6 +10,21 @@ var app = {
 
 		var buildingSettings = new app.Models.BuildingSettings();
 
+		var floors = new app.Collections.Floors();
+		elevators =  new app.Collections.Elevators();
+
+		for (var i = 1; i <= buildingSettings.totalFloors(); ++i) {
+			floors.add(new app.Models.Floor({
+				floor: i
+			}));
+		}
+
+		for (i = 0; i < buildingSettings.get('elevators'); ++i) {
+			elevators.add(new app.Models.Elevator({
+				currentFloor: 1
+			}));
+		}
+
 		var probability = new app.Models.Probability({
 			buildingSettings: buildingSettings
 		});
@@ -20,10 +35,12 @@ var app = {
 			probability: probability
 		});
 
-		simulator.start();
+		var buildingView = new app.Views.Building({
+			el: $('#mainshow .building'),
+			floors: floors,
+			elevators: elevators,
+		});
+		buildingView.render();
 
-		// var buildingView = app.Views.Building({
-		// 	el: $('#mainshow')
-		// });
 	}
 };
