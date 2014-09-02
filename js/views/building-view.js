@@ -36,11 +36,11 @@ app.Views.Elevator = Backbone.View.extend({
 	className: 'elevator',
 
 	initialize: function() {
-		this.listenTo(this.model, "change:currentFloor", this.updatePosition)
+		this.listenTo(this.model, "change:moving", this.updatePosition)
 	},
 
-	updatePosition: function(model, value) {
-		var distance = Math.abs(value - model.previous('currentFloor'));
+	updatePosition: function(model, newFloor) {
+		var distance = Math.abs(newFloor - model.get('currentFloor'));
 		this.$el.animate({
 			top: 9 + (-40 * value)
 		}, model.get('frequency') * 1000 * distance);

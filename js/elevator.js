@@ -1,60 +1,60 @@
 (function() {
 
-	function _updateFloor() {
-		var currentFloor = this.get('currentFloor');
-		var newFloor = (this.get('direction') === app.UP) ? ++currentFloor : --currentFloor;
-		this.set('currentFloor', newFloor);
-	}
-
-	var _currentActionTimeout = [],
-		currentFloor,
-		direction = 0,
-		speed,
-		passengers = [],
-		actionInProgress = false,
-		canInterrupt = false;
-
 	app.Models.Elevator = Backbone.Model.extend({
 		initialize: function() {
 			this.set('passengers', new app.Collections.DestinationSortedPersonList());
 		},
 
 		moveTo: function(floor) {
-			var canInterrupt = this.get('canInterrupt');
-			if (this.get('inMotion') && !canInterrupt) {
-				return false;
+			if (this.get('moving')) {
+				console.warn('Attempted to dispatch elevator which was already moving');
+				return;
+			}
+			if (this.get('doorOpen')) {
+				console.warn('Cannot move an elevator while the door is open');
+				return;
 			}
 			this.set('realTarget', floor);
 			var distance = this.get('currentFloor') - floor;
-			this.set('inMotion', true);
-			// Set timeout for updating the current floor
-			window.setTimeout(_updateFloor, this.get('frequency') * 1000);
+			window.setTimeout(_.bind(_arrivedAt, this, distance), distance * 1000 * this.get('frequency'));
+			this.set('moving', true);
 		},
 
-		floorChange: function() {
-			this.trigger('floorChange', this.get('passengers').length);
+		isEmpty: function() {
+			return passengers.length === 0;
 		},
 
-		gettingOff: function() {
+		hasSpace: function() {
+			return this.get('passengers').length < this.get('capacity');
+		},
+
+		unload: function() {
 			var passengers = this.get('passengers');
-			if (passengers.length === 0) {
-				return false;
-			}
-			var method = this.get('direction') === app.UP ? 'first' : 'last';
-			return passengers[method].get('destination') === this.get('currentFloor');
+			passengers.remove(passengers.where({destination: this.get('currentFloor')}));
+		},
+
+		closeDoor: function() {
+			this.set('doorOpen', false);
+		},
+
+		defaults: {
+			frequency: 0.5,
+			capacity: 14,
+			doorDelay: 0.1
 		}
 	});
 
+	function _arrivedAt(floor) {
+		this.set({
+			moving: false,
+			doorOpen: true,
+			currentFloor: newFloor,
+		});
+		window.setTimeout(_.bind(this.closeDoor, this), this.get('doorDelay') * 1000);
+	}
+
 })();
 
-window.app.Collections.Elevators = Backbone.Model.extend({
+window.app.Collections.Elevators = Backbone.Collection.extend({
 	model: app.Models.Elevator
-});
-
-app.Models.Statistics = Backbone.Model.extend({
-	floorsCovered: 0,
-	passengersDelivered: 0,
-	passengersArrived: 0,
-	startTime: 0,
-	endTime: 0
 });
