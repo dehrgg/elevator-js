@@ -60,3 +60,9 @@ html {
 	left: 102px;
 	margin-left: 12px;
 }
+
+.person-count {
+	float: right;
+	font-size: 30px;
+	margin-right: 10px;
+}

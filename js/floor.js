@@ -10,8 +10,7 @@ window.app.Models.Floor = Backbone.Model.extend({
 	},
 
 	hasPeopleWaiting: function(direction) {
-		return ( direction === app.UP && this.get('goingUp').length > 0) 
-			|| (direction === app.DOWN && this.get('goingDown').length > 0);
+		return ( direction === app.UP && this.get('goingUp').length > 0) || (direction === app.DOWN && this.get('goingDown').length > 0);
 	},
 
 	nextInLine: function(direction) {
