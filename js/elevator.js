@@ -6,6 +6,9 @@
 		},
 
 		moveTo: function(floor) {
+			if (floor == this.get('currentFloor')) {
+				return;
+			}
 			if (this.get('moving')) {
 				console.warn('Attempted to dispatch elevator which was already moving');
 				return;
@@ -14,23 +17,30 @@
 				console.warn('Cannot move an elevator while the door is open');
 				return;
 			}
-			this.set('realTarget', floor);
-			var distance = this.get('currentFloor') - floor;
-			window.setTimeout(_.bind(_arrivedAt, this, distance), distance * 1000 * this.get('frequency'));
-			this.set('moving', true);
+			var distance = Math.abs(this.get('currentFloor') - floor);
+			window.setTimeout(_.bind(_arrivedAt, this, floor), distance * 1000 * this.get('frequency'));
+			this.set('moving', floor);
 		},
 
 		isEmpty: function() {
-			return passengers.length === 0;
+			return this.get('passengers').length === 0;
 		},
 
 		hasSpace: function() {
 			return this.get('passengers').length < this.get('capacity');
 		},
 
+		available: function() {
+			return !(this.get('doorOpen') || this.get('moving')) && this.isEmpty();
+		},
+
 		unload: function() {
 			var passengers = this.get('passengers');
 			passengers.remove(passengers.where({destination: this.get('currentFloor')}));
+		},
+
+		addPassenger: function(passenger) {
+			this.get('passengers').add(passenger);
 		},
 
 		closeDoor: function() {
@@ -48,7 +58,7 @@
 		this.set({
 			moving: false,
 			doorOpen: true,
-			currentFloor: newFloor,
+			currentFloor: floor,
 		});
 		window.setTimeout(_.bind(this.closeDoor, this), this.get('doorDelay') * 1000);
 	}

@@ -1,5 +1,5 @@
 (function(){
-	
+
 	app.Models.Simulator = Backbone.Model.extend({
 
 		defaults: {
@@ -13,8 +13,9 @@
 		elevatorArrival: function(elevator, floorNumber) {
 			var floor = this.get('floors').at(floorNumber - 1),
 				direction = elevator.get('direction');
+			elevator.unload();
 			if (floor.hasPeopleWaiting(direction)) {
-				while (elevator.hasSpace()) {
+				while (elevator.hasSpace() && floor.hasPeopleWaiting(direction)) {
 					elevator.addPassenger(floor.nextInLine(direction))
 				}
 			}

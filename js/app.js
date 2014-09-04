@@ -11,7 +11,7 @@ var app = {
 		var buildingSettings = new app.Models.BuildingSettings();
 
 		var floors = new app.Collections.Floors();
-		elevators =  new app.Collections.Elevators();
+		var elevators =  new app.Collections.Elevators();
 
 		for (var i = 1; i <= buildingSettings.totalFloors(); ++i) {
 			floors.add(new app.Models.Floor({
@@ -32,7 +32,8 @@ var app = {
 		var simulator = new app.Models.Simulator({
 			floors: floors,
 			elevators: elevators,
-			probability: probability
+			probability: probability,
+			decisionModel: new app.Models.SimpleDecisionModel()
 		});
 
 		var buildingView = new app.Views.Building({
@@ -42,5 +43,6 @@ var app = {
 		});
 		buildingView.render();
 
+		simulator.start();
 	}
 };

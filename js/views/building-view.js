@@ -16,7 +16,10 @@ app.Views.Building = Backbone.View.extend({
 	},
 
 	addFloor: function(model) {
-		var view = new app.Views.Floor({ shafts: this.elevators.length });
+		var view = new app.Views.Floor({ 
+			model: model,
+			shafts: this.elevators.length 
+		});
 		this.$el.prepend(view.render().$el);
 		this.floorViews[model.cid] = view;
 	},
@@ -40,9 +43,12 @@ app.Views.Elevator = Backbone.View.extend({
 	},
 
 	updatePosition: function(model, newFloor) {
-		var distance = Math.abs(newFloor - model.get('currentFloor'));
-		this.$el.animate({
-			top: 9 + (-40 * value)
-		}, model.get('frequency') * 1000 * distance);
+		if (newFloor) {
+			var distance = Math.abs(newFloor - model.get('currentFloor'));
+			this.$el.animate({
+				top: 9 + (-40 * newFloor)
+			}, model.get('frequency') * 1000 * distance);
+		}
+		
 	}
 });
