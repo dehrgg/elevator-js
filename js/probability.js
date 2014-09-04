@@ -2,42 +2,57 @@
 		app.Models.Probability = Backbone.Model.extend({
 
 		overrides: [],
+
+		checkArrivals: function(floors) {
+			floors.each(this.addArrivals, this);
+		},
 		
-		getArrivals: function(floor) {
-			var arrivals = {}, destination;
-			if (_anyoneArriving(floor, app.UP)) {
-				destination = _randomBetween(floor + 1, this.get('buildingSettings').totalFloors());
-				arrivals[app.UP] = destination;
+		addArrivals: function(floor) {
+			var arrivals = {}, destination, floorNumber = floor.get('floor');
+			if (this.anyoneArriving(floorNumber, app.UP)) {
+				destination = _randomBetween(floorNumber + 1, this.get('buildingSettings').totalFloors());
+				floor.get('goingUp').add(new app.Models.Person({destination: destination}));
 			}
-			if (_anyoneArriving(floor, app.DOWN)) {
+			if (this.anyoneArriving(floorNumber, app.DOWN)) {
 				destination = _randomBetween(1, this.get('buildingSettings').get('groundFloors'));
-				arrivals[app.DOWN] = destination;
+				floor.get('goingDown').add(new app.Models.Person({destination: destination}));
 			}
-			return arrivals;
+		},
+
+		anyoneArriving: function(floor, direction) {
+			return Math.random() < this.probabilityForCurrentTime(floor, direction);
+		},
+
+		probabilityForCurrentTime: function(floor, direction) {
+			var isGroundFloor = floor <= this.get('buildingSettings').get('groundFloors');
+			if (isGroundFloor && direction === app.UP) {
+				return 0.4;
+			}
+			else if (isGroundFloor) {
+				return (floor === 1) ? 0 : 0.05;
+			}
+			else if (direction === app.DOWN) {
+				return 0.1;
+			}
+			else {
+				return (floor === this.get('buildingSettings').totalFloors()) ? 0 : 0.05;
+			}
+			// var overrides = this.get('overrides');
+			// if (overrides[direction][floor]) {
+			// 	return 
+			// }
+			// 
+			// if (overrides[floor]) {
+			// 	return _valueForSetting(overrides[floor]);
+			// }
+			// var buildingSettings = this.get('buildingSettings');
+			// if (floor > buildingSettings.get('groundFloors')) {
+
+			// }
 		},
 
 		defaults: function() { return _residentialDefaults; }
 	});
-
-	function _annyoneArriving(floor, direction) {
-		return Math.random() < _probabilityForCurrentTime(floor, direction);
-	}
-
-	function _probabilityForCurrentTime(floor, direction) {
-		var isGroundFloor = floor <= this.get('buildingSettings').get('groundFloors');
-		if (isGroundFloor && direction === app.UP) {
-			return 0.4;
-		}
-		else if (isGroundFloor) {
-			return (floor === 1) ? 0 : 0.05;
-		}
-		else if (direction === app.DOWN) {
-			return 0.1;
-		}
-		else {
-			return (floor === this.get('buildingSettings').totalFloors()) ? 0 : 0.05;
-		}
-	}
 
 	function _randomBetween(low, high) {
 		return Math.floor(Math.random() * (low - high)) + low;
