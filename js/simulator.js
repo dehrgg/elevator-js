@@ -7,7 +7,6 @@
 		},
 
 		initialize: function() {
-			this.listenTo(this.get('floors'), 'arrival', this.dispatch);
 			this.listenTo(this.get('elevators'), 'change:currentFloor', this.elevatorArrival);
 		},
 
@@ -22,12 +21,9 @@
 			this.dispatch();
 		},
 
-		dispatch: function() {
-			this.get('decisionModel').dispatch(this.get('floors'), this.get('elevators'));
-		},
-
 		tick: function() {
 			this.get('probability').checkArrivals(this.get('floors'));
+			this.get('decisionModel').dispatch(this.get('floors'), this.get('elevators'));
 		},
 
 		start: function() {
