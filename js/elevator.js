@@ -47,6 +47,20 @@
 			this.set('doorOpen', false);
 		},
 
+		nextPassengerDestination: function() {
+			var direction = this.get('direction');
+			if (this.isEmpty()) {
+				return false;
+			}
+			if ( direction === app.UP) {
+				return elevator.get('passengers').first().get('destination');
+			}
+			else if (direction === app.DOWN) {
+				return elevator.get('passengers').last().get('destination');
+			}
+			console.warn("Non-empty elevator with invalid direction @ Models.Elevator.nextPassengerDestination");
+		},
+
 		defaults: {
 			frequency: 0.5,
 			capacity: 14,
