@@ -43,6 +43,6 @@ var app = {
 		});
 		buildingView.render();
 
-		simulator.start();
+		simulator.tick();
 	}
 };

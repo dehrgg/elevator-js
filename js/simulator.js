@@ -4,6 +4,7 @@
 
 		defaults: {
 			processTick: 1,
+			play: false,
 		},
 
 		initialize: function() {
@@ -19,16 +20,12 @@
 					elevator.addPassenger(floor.nextInLine(direction))
 				}
 			}
-			this.dispatch();
 		},
 
 		tick: function() {
 			this.get('probability').checkArrivals(this.get('floors'));
 			this.get('decisionModel').dispatch(this.get('floors'), this.get('elevators'));
-		},
-
-		start: function() {
-			window.setTimeout(_.bind(this.tick, this), this.get('processTick') * 1000);
+			this.get('play') && window.setTimeout(_.bind(this.tick, this), this.get('processTick') * 1000);
 		}
 	});
 })();
