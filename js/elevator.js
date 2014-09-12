@@ -6,9 +6,6 @@
 		},
 
 		moveTo: function(floor) {
-			if (floor == this.get('currentFloor')) {
-				return;
-			}
 			if (this.get('moving')) {
 				console.warn('Attempted to dispatch elevator which was already moving');
 				return;
@@ -74,6 +71,7 @@
 			doorOpen: true,
 			currentFloor: floor,
 		});
+		this.trigger('arrived', this, floor);
 		window.setTimeout(_.bind(this.closeDoor, this), this.get('doorDelay') * 1000);
 	}
 

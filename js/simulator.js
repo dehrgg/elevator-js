@@ -8,7 +8,7 @@
 		},
 
 		initialize: function() {
-			this.listenTo(this.get('elevators'), 'change:currentFloor', this.elevatorArrival);
+			this.listenTo(this.get('elevators'), 'arrived', this.elevatorArrival);
 		},
 
 		elevatorArrival: function(elevator, floorNumber) {
