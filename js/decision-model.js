@@ -23,7 +23,7 @@ app.Models.SimpleDecisionModel = (function() {
 			floor,
 			floorIndex;
 		if (direction === app.UP && baseFloor < floors.length) {
-			floorsToCheck = floors.rest(baseFloor);
+			floorsToCheck = floors.rest(baseFloor - 1);
 			floor = _.find(floorsToCheck, function(floor){
 				return floor.get('goingUp').length > 0 && !_alreadyCovered(floor.get('floor'), direction);
 			});
